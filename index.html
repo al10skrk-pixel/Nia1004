@@ -1,1 +1,965 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows XP - Dolphin VN (Gray Edition)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Tahoma', 'Segoe UI', '맑은 고딕', sans-serif;
+            font-size: 12px;
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        /* ----------------------------------------------------
+           1. 부팅 화면 (Boot Screen)
+        ---------------------------------------------------- */
+        .boot-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #0a0a0a;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.6s ease;
+        }
+
+        .boot-screen.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .boot-logo-box {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .boot-title {
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: -1px;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+        }
+
+        .boot-subtitle {
+            font-size: 14px;
+            color: #888888;
+            margin-top: 5px;
+            letter-spacing: 2px;
+        }
+
+        /* 부팅 로딩 바 (XP 스타일) */
+        .boot-loading-bar {
+            width: 180px;
+            height: 14px;
+            border: 2px solid #555555;
+            border-radius: 4px;
+            padding: 2px;
+            background-color: #111111;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .boot-progress-chunk {
+            width: 30px;
+            height: 100%;
+            background: linear-gradient(to right, #444444, #aaaaaa, #444444);
+            border-radius: 2px;
+            position: absolute;
+            animation: bootProgress 1.6s infinite linear;
+        }
+
+        @keyframes bootProgress {
+            0% { left: -30px; }
+            100% { left: 180px; }
+        }
+
+        /* ----------------------------------------------------
+           2. 잠금 화면 (Lock Screen)
+        ---------------------------------------------------- */
+        .lock-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(to bottom, #222222 0%, #111111 50%, #050505 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 9000;
+            transition: opacity 0.5s ease;
+        }
+
+        .lock-screen.hidden {
+            display: none;
+        }
+
+        .lock-top-bar, .lock-bottom-bar {
+            height: 60px;
+            background-color: #000000;
+            border-bottom: 2px solid #333333;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+        }
+
+        .lock-bottom-bar {
+            border-bottom: none;
+            border-top: 2px solid #333333;
+            justify-content: space-between;
+            color: #777777;
+        }
+
+        .lock-center-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            padding: 20px;
+        }
+
+        .lock-divider {
+            width: 2px;
+            height: 180px;
+            background: linear-gradient(to bottom, transparent, #555555, transparent);
+        }
+
+        .lock-left-brand {
+            text-align: right;
+            padding-right: 20px;
+        }
+
+        .lock-left-brand h1 {
+            font-size: 28px;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .lock-left-brand p {
+            font-size: 12px;
+            color: #888888;
+        }
+
+        .lock-user-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px 20px;
+            border-radius: 8px;
+            border: 1px solid #333333;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .lock-avatar-box {
+            width: 60px;
+            height: 60px;
+            border-radius: 6px;
+            border: 2px solid #666666;
+            overflow: hidden;
+            background-color: #222222;
+        }
+
+        .lock-avatar-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%);
+        }
+
+        .lock-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .lock-username {
+            font-size: 15px;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .lock-input-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .lock-password-input {
+            width: 160px;
+            padding: 6px 10px;
+            border: 1px solid #555555;
+            border-radius: 3px;
+            background-color: #111111;
+            color: #ffffff;
+            outline: none;
+            font-size: 12px;
+        }
+
+        .lock-password-input:focus {
+            border-color: #aaaaaa;
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+        }
+
+        .lock-submit-btn {
+            padding: 6px 12px;
+            background: linear-gradient(to bottom, #555555, #222222);
+            border: 1px solid #777777;
+            border-radius: 3px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .lock-submit-btn:hover {
+            filter: brightness(1.2);
+        }
+
+        .lock-error-msg {
+            color: #ff6666;
+            font-size: 11px;
+            height: 14px;
+        }
+
+        /* ----------------------------------------------------
+           3. 바탕 화면 (Desktop)
+        ---------------------------------------------------- */
+        .desktop {
+            width: 100vw;
+            height: calc(100vh - 30px);
+            
+            /* ==========================================================================
+               [수정 위치 1] 바탕화면 배경 이미지 URL
+               ========================================================================== */
+            background: #222222 url('https://upload.wikimedia.org/wikipedia/en/2/27/Bliss_%28Windows_XP%29.png') no-repeat center center fixed;
+            background-size: cover;
+            
+            filter: grayscale(100%);
+            position: relative;
+            padding: 15px;
+        }
+
+        /* 바탕화면 아이콘 */
+        .icon {
+            width: 110px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 6px;
+            border: 1px solid transparent;
+            cursor: pointer;
+            border-radius: 3px;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px #000000;
+        }
+
+        .icon:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            border: 1px dotted rgba(255, 255, 255, 0.5);
+        }
+
+        .icon.selected {
+            background-color: rgba(255, 255, 255, 0.3);
+            border: 1px solid #888888;
+        }
+
+        .icon-img-box {
+            width: 42px;
+            height: 42px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .icon-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.8));
+        }
+
+        .icon-text {
+            text-align: center;
+            font-size: 11px;
+            line-height: 1.3;
+            word-break: keep-all;
+        }
+
+        /* ----------------------------------------------------
+           4. 윈도우 창 스타일 (Gray 스케일 미연시 창)
+        ---------------------------------------------------- */
+        .window {
+            position: absolute;
+            width: 640px;
+            height: 480px;
+            top: 50px;
+            left: 150px;
+            background-color: #d8d8d8;
+            border: 3px solid #444444;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        /* 기본 상태: 바탕화면 진입 시 창은 안 보임 */
+        .window.hidden {
+            display: none !important;
+        }
+
+        .title-bar {
+            height: 30px;
+            background: linear-gradient(to bottom, #777777 0%, #555555 10%, #333333 50%, #222222 80%, #111111 100%);
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 6px;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 12px;
+            text-shadow: 1px 1px 1px #000000;
+            cursor: move;
+        }
+
+        .title-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .small-icon-img {
+            width: 16px;
+            height: 16px;
+            object-fit: contain;
+        }
+
+        .window-controls {
+            display: flex;
+            gap: 3px;
+        }
+
+        .win-btn {
+            width: 21px;
+            height: 21px;
+            border-radius: 3px;
+            border: 1px solid #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+            box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.8);
+            background: linear-gradient(to bottom, #666666, #222222);
+            color: #ffffff;
+        }
+
+        .win-btn:active { filter: brightness(0.7); }
+
+        /* 미연시 게임 화면 */
+        .game-viewport {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background-color: #0d0d0d;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .game-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%) brightness(0.7);
+        }
+
+        .character-img {
+            position: absolute;
+            bottom: 0;
+            height: 85%;
+            object-fit: contain;
+            z-index: 2;
+            filter: grayscale(100%) drop-shadow(0 0 10px rgba(0,0,0,0.8));
+            transition: transform 0.2s ease;
+        }
+
+        .dialogue-box {
+            position: absolute;
+            bottom: 12px;
+            left: 15px;
+            right: 15px;
+            height: 115px;
+            background: rgba(20, 20, 20, 0.85);
+            border: 2px solid #888888;
+            border-radius: 6px;
+            box-shadow: 0 0 0 1px #000000, inset 0 0 10px rgba(255, 255, 255, 0.15);
+            padding: 12px 18px;
+            z-index: 3;
+            color: #ffffff;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .character-name {
+            font-size: 14px;
+            font-weight: bold;
+            color: #dddddd;
+            text-shadow: 1px 1px 2px #000;
+            margin-bottom: 6px;
+        }
+
+        .dialogue-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: #ffffff;
+            text-shadow: 1px 1px 2px #000;
+            letter-spacing: 0.5px;
+            word-break: break-all;
+        }
+
+        .next-arrow {
+            align-self: flex-end;
+            font-size: 10px;
+            color: #aaaaaa;
+            animation: bounce 0.8s infinite alternate;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(4px); }
+        }
+
+        /* ----------------------------------------------------
+           5. 태스크바
+        ---------------------------------------------------- */
+        .taskbar {
+            width: 100vw;
+            height: 30px;
+            background: linear-gradient(to bottom, #555555 0%, #333333 10%, #222222 50%, #111111 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            z-index: 100;
+            border-top: 1px solid #666666;
+        }
+
+        .start-btn {
+            height: 100%;
+            padding: 0 15px 0 10px;
+            background: linear-gradient(to bottom, #666666 0%, #444444 40%, #222222 100%);
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 14px;
+            font-style: italic;
+            text-shadow: 1px 1px 1px #000000;
+            cursor: pointer;
+            border-right: 1px solid #888888;
+        }
+
+        .start-btn:hover { filter: brightness(1.2); }
+
+        .start-flag {
+            width: 16px;
+            height: 16px;
+            background: #888888;
+            clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
+            border-radius: 2px;
+        }
+
+        .taskbar-items {
+            flex: 1;
+            display: flex;
+            padding: 0 10px;
+            gap: 5px;
+        }
+
+        .taskbar-item {
+            width: 180px;
+            height: 22px;
+            background: linear-gradient(to bottom, #444444, #222222);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            padding: 0 8px;
+            gap: 6px;
+            color: #ffffff;
+            cursor: pointer;
+            border: 1px solid #666666;
+            display: none; /* 창이 열릴 때 나타남 */
+        }
+
+        .taskbar-item.active {
+            display: flex;
+            background: linear-gradient(to bottom, #111111, #333333);
+            box-shadow: inset 1px 1px 2px rgba(0,0,0,0.8);
+            border-color: #888888;
+        }
+
+        .taskbar-item-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-size: 11px;
+        }
+
+        .system-tray {
+            height: 100%;
+            background: linear-gradient(to bottom, #333333 0%, #111111 100%);
+            border-left: 1px solid #444444;
+            display: flex;
+            align-items: center;
+            padding: 0 12px;
+            color: #ffffff;
+            font-size: 11px;
+        }
+
+        /* ----------------------------------------------------
+           6. 블루스크린 (BSOD)
+        ---------------------------------------------------- */
+        .bsod {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #1a1a1a;
+            color: #dddddd;
+            font-family: 'Lucida Console', 'Courier New', monospace;
+            padding: 45px 60px;
+            z-index: 9999;
+            display: none;
+            overflow: hidden;
+            box-sizing: border-box;
+            cursor: pointer;
+            border: 4px solid #444444;
+        }
+
+        .bsod.active {
+            display: block;
+        }
+
+        .bsod-header {
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .bsod-error-code {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .bsod-spammed-text {
+            font-size: 15px;
+            line-height: 1.6;
+            word-break: break-all;
+            color: #cccccc;
+            letter-spacing: 1px;
+        }
+
+        .bsod-footer {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #aaaaaa;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. 부팅 화면 (Boot Screen) -->
+    <div class="boot-screen" id="boot-screen">
+        <div class="boot-logo-box">
+            <div class="boot-title">Microsoft Windows XP</div>
+            <div class="boot-subtitle">MONOCHROME EDITION</div>
+        </div>
+        <div class="boot-loading-bar">
+            <div class="boot-progress-chunk"></div>
+        </div>
+    </div>
+
+    <!-- 2. 잠금 화면 (Lock Screen) -->
+    <div class="lock-screen hidden" id="lock-screen">
+        <div class="lock-top-bar"></div>
+        
+        <div class="lock-center-content">
+            <div class="lock-left-brand">
+                <h1>Windows XP</h1>
+                <p>시작하려면 사용자 비밀번호를 입력하십시오.</p>
+            </div>
+            
+            <div class="lock-divider"></div>
+
+            <div class="lock-user-card">
+                <div class="lock-avatar-box">
+                    <!-- ==========================================================================
+                       [수정 위치 0] 잠금 화면 유저 아바타 이미지 URL
+                       ========================================================================== -->
+                    <img src="https://images.file.i-cafe.kr/2026/0214/image-4985fee7-7694-4066-889c-3e58e0301248.png" alt="User Avatar">
+                </div>
+                <div class="lock-input-group">
+                    <div class="lock-username">오팀장 (User)</div>
+                    <div class="lock-input-row">
+                        <input type="password" class="lock-password-input" id="password-input" placeholder="비밀번호 입력..." autocomplete="off">
+                        <button class="lock-submit-btn" id="lock-submit-btn">확인</button>
+                    </div>
+                    <div class="lock-error-msg" id="lock-error-msg"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lock-bottom-bar">
+            <span>사용자를 변경하려면 [확인]을 누르십시오.</span>
+            <span>전원 관리</span>
+        </div>
+    </div>
+
+    <!-- 3. 바탕 화면 (Desktop) -->
+    <div class="desktop" id="desktop">
+        
+        <!-- 바탕화면 아이콘 -->
+        <div class="icon" id="dolphin-icon">
+            <div class="icon-img-box">
+                <!-- ==========================================================================
+                   [수정 위치 2] 바탕화면 아이콘 이미지 URL
+                   ========================================================================== -->
+                <img src="https://images.file.i-cafe.kr/2026/0214/image-4985fee7-7694-4066-889c-3e58e0301248.png" alt="아이콘 이미지">
+            </div>
+            <div class="icon-text">절대 바이러스 아닙니다. 믿어 주세요… 전 돌고래 입니다</div>
+        </div>
+
+        <!-- 미연시 게임 창 (기본 상태: hidden으로 숨김 처리) -->
+        <div class="window hidden" id="game-window">
+            <!-- 타이틀 바 -->
+            <div class="title-bar" id="title-bar">
+                <div class="title-bar-left">
+                    <!-- ==========================================================================
+                       [수정 위치 3] 창 상단 타이틀바 작은 아이콘 이미지 URL
+                       ========================================================================== -->
+                    <img src="https://images.file.i-cafe.kr/2026/0214/image-4985fee7-7694-4066-889c-3e58e0301248.png" alt="작은 아이콘" class="small-icon-img">
+                    <span id="window-title">절대 바이러스 아닙니다.exe</span>
+                </div>
+                <div class="window-controls">
+                    <div class="win-btn btn-minimize" id="btn-minimize">_</div>
+                    <div class="win-btn btn-maximize" id="btn-maximize">□</div>
+                    <div class="win-btn btn-close" id="btn-close">✕</div>
+                </div>
+            </div>
+
+            <!-- 게임 뷰포트 -->
+            <div class="game-viewport">
+                <!-- ==========================================================================
+                   [수정 위치 4] 미연시 창 내부 '방 배경' 이미지 URL
+                   ========================================================================== -->
+                <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1000&q=80" alt="방 배경" class="game-bg">
+
+                <!-- ==========================================================================
+                   [수정 위치 5] 미연시 창 내부 '캐릭터' 이미지 URL
+                   ========================================================================== -->
+                <img src="https://images.file.i-cafe.kr/2026/0214/image-4985fee7-7694-4066-889c-3e58e0301248.png" alt="캐릭터" class="character-img" id="character-img">
+
+                <!-- 미연시 스타일 UI (대사 상자) -->
+                <div class="dialogue-box" id="dialogue-box">
+                    <div class="character-name" id="char-name">???</div>
+                    <div class="dialogue-text" id="char-text">"안녕? 날 클릭한 거야? 바이러스인 줄 알고 놀랐지...?"</div>
+                    <div class="next-arrow">▼ 클릭하여 계속</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 4. 하단 태스크바 -->
+    <div class="taskbar">
+        <div class="start-btn" id="start-btn">
+            <div class="start-flag"></div>
+            <span>start</span>
+        </div>
+        <div class="taskbar-items">
+            <div class="taskbar-item" id="taskbar-game">
+                <!-- ==========================================================================
+                   [수정 위치 6] 태스크바 프로그램 아이콘 이미지 URL
+                   ========================================================================== -->
+                <img src="https://images.file.i-cafe.kr/2026/0214/image-4985fee7-7694-4066-889c-3e58e0301248.png" alt="작은 아이콘" class="small-icon-img">
+                <span class="taskbar-item-text">절대 바이러스 아닙니다.exe</span>
+            </div>
+        </div>
+        <div class="system-tray">
+            <span id="clock">10:10 PM</span>
+        </div>
+    </div>
+
+    <!-- 5. 블루스크린 (BSOD) 레이어 -->
+    <div class="bsod" id="bsod-screen">
+        <div class="bsod-header">
+            A problem has been detected and Windows has been shut down to prevent damage to your computer.
+        </div>
+        <div class="bsod-error-code">
+            CRITICAL_PROCESS_DIED / DONT_LEAVE_ME_ERROR
+        </div>
+        <div class="bsod-spammed-text" id="bsod-spam-content"></div>
+        <div class="bsod-footer">
+            <br>
+            Technical Information:<br>
+            *** STOP: 0x000000ED (0x80F128D0, 0xC000009C, 0x00000000, 0x00000000)<br><br>
+            [클릭하거나 ESC 키를 누르면 시스템이 재부팅됩니다...]
+        </div>
+    </div>
+
+    <script>
+        // DOM 요소 정의
+        const bootScreen = document.getElementById('boot-screen');
+        const lockScreen = document.getElementById('lock-screen');
+        const passwordInput = document.getElementById('password-input');
+        const lockSubmitBtn = document.getElementById('lock-submit-btn');
+        const lockErrorMsg = document.getElementById('lock-error-msg');
+
+        const dolphinIcon = document.getElementById('dolphin-icon');
+        const gameWindow = document.getElementById('game-window');
+        const btnClose = document.getElementById('btn-close');
+        const btnMinimize = document.getElementById('btn-minimize');
+        const btnMaximize = document.getElementById('btn-maximize');
+        const taskbarGame = document.getElementById('taskbar-game');
+        const titleBar = document.getElementById('title-bar');
+        const clockElement = document.getElementById('clock');
+        const startBtn = document.getElementById('start-btn');
+        const bsodScreen = document.getElementById('bsod-screen');
+        const bsodSpamContent = document.getElementById('bsod-spam-content');
+
+        const charName = document.getElementById('char-name');
+        const charText = document.getElementById('char-text');
+        const dialogueBox = document.getElementById('dialogue-box');
+        const characterImg = document.getElementById('character-img');
+
+        // 비밀번호 설정
+        const CORRECT_PASSWORD = "nia1004";
+
+        // 1. 부팅 시퀀스 -> 잠금화면 전환 (2.8초 후)
+        setTimeout(() => {
+            bootScreen.classList.add('fade-out');
+            setTimeout(() => {
+                bootScreen.style.display = 'none';
+                lockScreen.classList.remove('hidden');
+                passwordInput.focus();
+            }, 600);
+        }, 2800);
+
+        // 2. 잠금화면 비밀번호 확인
+        function checkPassword() {
+            const inputVal = passwordInput.value;
+            if (inputVal === CORRECT_PASSWORD) {
+                lockErrorMsg.textContent = "";
+                lockScreen.style.opacity = '0';
+                setTimeout(() => {
+                    lockScreen.classList.add('hidden');
+                }, 500);
+            } else {
+                lockErrorMsg.textContent = "비밀번호가 올바르지 않습니다.";
+                passwordInput.value = "";
+                passwordInput.focus();
+            }
+        }
+
+        lockSubmitBtn.addEventListener('click', checkPassword);
+        passwordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+
+        // 대사 데이터
+        const script = [
+            { name: "???", text: '"안녕? 날 클릭한 거야? 바이러스인 줄 알고 놀랐지...?"' },
+            { name: "돌고래(?) 소녀", text: '"난 해로운 프로그램이 아니야. 그저... 너랑 이야기하고 싶었을 뿐이라구."' },
+            { name: "돌고래(?) 소녀", text: '"결국 내가 노력해도 사람들에게 의심만 받고, 좋은 일은 하나도 없었지만..."' },
+            { name: "돌고래(?) 소녀", text: '"그래도 이렇게 들어와 줬으니까... 절대 날 두고 종료하면 안 돼?"' }
+        ];
+        let currentScriptIndex = 0;
+
+        // 대사 진행
+        dialogueBox.addEventListener('click', () => {
+            currentScriptIndex = (currentScriptIndex + 1) % script.length;
+            charName.textContent = script[currentScriptIndex].name;
+            charText.textContent = script[currentScriptIndex].text;
+
+            characterImg.style.transform = 'scale(1.03)';
+            setTimeout(() => {
+                characterImg.style.transform = 'scale(1)';
+            }, 150);
+        });
+
+        // 바탕화면 아이콘 선택 효과
+        dolphinIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            dolphinIcon.classList.add('selected');
+        });
+
+        document.getElementById('desktop').addEventListener('click', () => {
+            dolphinIcon.classList.remove('selected');
+        });
+
+        // 아이콘을 눌러야만 창이 나타나도록 처리
+        dolphinIcon.addEventListener('click', openGame);
+        dolphinIcon.addEventListener('dblclick', openGame);
+
+        function openGame() {
+            gameWindow.classList.remove('hidden');
+            taskbarGame.style.display = 'flex';
+            taskbarGame.classList.add('active');
+        }
+
+        // 창 제어 버튼
+        btnClose.addEventListener('click', () => {
+            gameWindow.classList.add('hidden');
+            taskbarGame.style.display = 'none';
+            taskbarGame.classList.remove('active');
+        });
+
+        btnMinimize.addEventListener('click', () => {
+            gameWindow.classList.add('hidden');
+            taskbarGame.classList.remove('active');
+        });
+
+        taskbarGame.addEventListener('click', () => {
+            if (gameWindow.classList.contains('hidden')) {
+                gameWindow.classList.remove('hidden');
+                taskbarGame.classList.add('active');
+            } else {
+                gameWindow.classList.add('hidden');
+                taskbarGame.classList.remove('active');
+            }
+        });
+
+        // Start 버튼 클릭 시 흑백 블루스크린
+        startBtn.addEventListener('click', triggerBSOD);
+
+        function triggerBSOD() {
+            const messages = [
+                "가지마", "가지마가지마가지마", "DONT_LEAVE_ME", "나를 두고 가지 마...",
+                "종료하지 마", "가지마!", "왜 나를 버리려고 해?", "PLEASE STAY",
+                "가지마가지마가지마가지마가지마", "절대 안 보내줄 거야", "DON'T LEAVE ME"
+            ];
+            
+            let spammedText = "";
+            for (let i = 0; i < 180; i++) {
+                const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+                spammedText += randomMsg + " ";
+            }
+            
+            bsodSpamContent.textContent = spammedText;
+            bsodScreen.classList.add('active');
+        }
+
+        bsodScreen.addEventListener('click', dismissBSOD);
+        document.addEventListener('keydown', (e) => {
+            if (bsodScreen.classList.contains('active')) {
+                dismissBSOD();
+            }
+        });
+
+        function dismissBSOD() {
+            bsodScreen.classList.remove('active');
+        }
+
+        // 창 최대화 토글
+        let isMaximized = false;
+        let originalRect = {};
+
+        btnMaximize.addEventListener('click', () => {
+            if (!isMaximized) {
+                originalRect = {
+                    top: gameWindow.style.top,
+                    left: gameWindow.style.left,
+                    width: gameWindow.style.width,
+                    height: gameWindow.style.height
+                };
+                gameWindow.style.top = '0px';
+                gameWindow.style.left = '0px';
+                gameWindow.style.width = '100vw';
+                gameWindow.style.height = 'calc(100vh - 30px)';
+                isMaximized = true;
+            } else {
+                gameWindow.style.top = originalRect.top || '50px';
+                gameWindow.style.left = originalRect.left || '150px';
+                gameWindow.style.width = originalRect.width || '640px';
+                gameWindow.style.height = originalRect.height || '480px';
+                isMaximized = false;
+            }
+        });
+
+        // 타이틀바 드래그 이동
+        let isDragging = false;
+        let offsetX, offsetY;
+
+        titleBar.addEventListener('mousedown', (e) => {
+            if (isMaximized) return;
+            isDragging = true;
+            offsetX = e.clientX - gameWindow.offsetLeft;
+            offsetY = e.clientY - gameWindow.offsetTop;
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                gameWindow.style.left = `${e.clientX - offsetX}px`;
+                gameWindow.style.top = `${e.clientY - offsetY}px`;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        // 시스템 시계
+        function updateClock() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            clockElement.textContent = `${hours}:${minutes} ${ampm}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
+
 
