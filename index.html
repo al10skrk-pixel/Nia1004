@@ -1,10 +1,9 @@
-```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windows XP - Dolphin VN (Gray Edition)</title>
+    <title>Windows XP - Dolphin VN</title>
     <style>
         * {
             box-sizing: border-box;
@@ -24,7 +23,7 @@
         }
 
         /* ----------------------------------------------------
-           1. 부팅 화면 (Boot Screen)
+           1. 부팅 화면 (Boot Screen) - 최상단 (z-index: 10000)
         ---------------------------------------------------- */
         .boot-screen {
             position: fixed;
@@ -38,7 +37,7 @@
             justify-content: center;
             align-items: center;
             z-index: 10000;
-            transition: opacity 0.6s ease;
+            transition: opacity 0.5s ease;
         }
 
         .boot-screen.fade-out {
@@ -66,7 +65,6 @@
             letter-spacing: 2px;
         }
 
-        /* 부팅 로딩 바 (XP 스타일) */
         .boot-loading-bar {
             width: 180px;
             height: 14px;
@@ -93,7 +91,7 @@
         }
 
         /* ----------------------------------------------------
-           2. 잠금 화면 (Lock Screen)
+           2. 잠금 화면 (Lock Screen) - 부팅 바로 뒤 (z-index: 9000)
         ---------------------------------------------------- */
         .lock-screen {
             position: fixed;
@@ -110,7 +108,7 @@
         }
 
         .lock-screen.hidden {
-            display: none;
+            display: none !important;
         }
 
         .lock-top-bar, .lock-bottom-bar {
@@ -184,7 +182,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: grayscale(100%);
         }
 
         .lock-input-group {
@@ -247,13 +244,9 @@
             width: 100vw;
             height: calc(100vh - 30px);
             
-            /* ==========================================================================
-               [imgs 폴더 설정 1] 바탕화면 배경 이미지 (imgs/bg.png)
-               ========================================================================== */
-            background: #222222 url('imgs/bg.png') no-repeat center center fixed;
+            /* [이미지 2] 바탕화면 배경 이미지 (images/002.png) */
+            background: #222222 url('images/002.png') no-repeat center center fixed;
             background-size: cover;
-            
-            filter: grayscale(100%);
             position: relative;
             padding: 15px;
         }
@@ -306,7 +299,7 @@
         }
 
         /* ----------------------------------------------------
-           4. 윈도우 창 스타일 (Gray 스케일 미연시 창)
+           4. 윈도우 창 스타일 (미연시 창)
         ---------------------------------------------------- */
         .window {
             position: absolute;
@@ -324,7 +317,6 @@
             z-index: 10;
         }
 
-        /* 창은 기본 숨김 처리 */
         .window.hidden {
             display: none !important;
         }
@@ -396,7 +388,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: grayscale(100%) brightness(0.7);
+            filter: brightness(0.7);
         }
 
         .character-img {
@@ -405,7 +397,7 @@
             height: 85%;
             object-fit: contain;
             z-index: 2;
-            filter: grayscale(100%) drop-shadow(0 0 10px rgba(0,0,0,0.8));
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
             transition: transform 0.2s ease;
         }
 
@@ -616,8 +608,8 @@
         </div>
     </div>
 
-    <!-- 2. 잠금 화면 (Lock Screen) -->
-    <div class="lock-screen hidden" id="lock-screen">
+    <!-- 2. 잠금 화면 (Lock Screen) - 초기 노출 상태로 유지하여 부팅 화면 뒤에 즉시 위치함 -->
+    <div class="lock-screen" id="lock-screen">
         <div class="lock-top-bar"></div>
         
         <div class="lock-center-content">
@@ -630,10 +622,8 @@
 
             <div class="lock-user-card">
                 <div class="lock-avatar-box">
-                    <!-- ==========================================================================
-                       [imgs 폴더 설정 2] 잠금 화면 아바타 이미지 (imgs/avatar.png)
-                       ========================================================================== -->
-                    <img src="imgs/avatar.png" alt="User Avatar">
+                    <!-- [이미지 1] 잠금 화면 유저 아바타 (images/001.png) -->
+                    <img src="images/001.png" alt="User Avatar">
                 </div>
                 <div class="lock-input-group">
                     <div class="lock-username">유저</div>
@@ -658,12 +648,10 @@
         <!-- 바탕화면 아이콘 -->
         <div class="icon" id="dolphin-icon">
             <div class="icon-img-box">
-                <!-- ==========================================================================
-                   [imgs 폴더 설정 3] 바탕화면 아이콘 이미지 (imgs/icon.png)
-                   ========================================================================== -->
-                <img src="imgs/icon.png" alt="아이콘 이미지">
+                <!-- [이미지 3] 바탕화면 아이콘 (images/003.png) -->
+                <img src="images/003.png" alt="아이콘 이미지">
             </div>
-            <div class="icon-text">절대 바이러스 아닙니다. 믿어 주세요… 전 돌고래 입니다</div>
+            <div class="icon-text">절대 바이러스 아닙니다. 믿어 주세요… 전 니아 입니다</div>
         </div>
 
         <!-- 미연시 게임 창 (기본 상태: hidden) -->
@@ -671,10 +659,8 @@
             <!-- 타이틀 바 -->
             <div class="title-bar" id="title-bar">
                 <div class="title-bar-left">
-                    <!-- ==========================================================================
-                       [imgs 폴더 설정 4] 타이틀바 작은 아이콘 이미지 (imgs/icon.png)
-                       ========================================================================== -->
-                    <img src="imgs/icon.png" alt="작은 아이콘" class="small-icon-img">
+                    <!-- [이미지 3] 창 상단 타이틀바 아이콘 (images/003.png) -->
+                    <img src="images/003.png" alt="작은 아이콘" class="small-icon-img">
                     <span id="window-title">절대 바이러스 아닙니다.exe</span>
                 </div>
                 <div class="window-controls">
@@ -686,23 +672,19 @@
 
             <!-- 게임 뷰포트 -->
             <div class="game-viewport">
-                <!-- ==========================================================================
-                   [imgs 폴더 설정 5] 미연시 창 내부 '방 배경' 이미지 (imgs/room.png)
-                   ========================================================================== -->
-                <img src="imgs/room.png" alt="방 배경" class="game-bg">
+                <!-- [이미지 4] 미연시 창 내부 '방 배경' (images/004.png) -->
+                <img src="images/004.png" alt="방 배경" class="game-bg">
 
-                <!-- ==========================================================================
-                   [imgs 폴더 설정 6] 미연시 창 내부 '캐릭터' 이미지 (imgs/character.png)
-                   ========================================================================== -->
-                <img src="imgs/character.png" alt="캐릭터" class="character-img" id="character-img">
+                <!-- [이미지 5] 미연시 창 내부 '캐릭터' (images/005.png) -->
+                <img src="images/005.png" alt="캐릭터" class="character-img" id="character-img">
 
                 <!-- 미연시 대사 상자 -->
                 <div class="dialogue-box" id="dialogue-box">
-                    <div class="character-name" id="char-name">???</div>
-                    <div class="dialogue-text" id="char-text">"안녕? 날 클릭한 거야? 바이러스인 줄 알고 놀랐지...?"</div>
+                    <div class="character-name" id="char-name">니아</div>
+                    <div class="dialogue-text" id="char-text">"안녕 하새요 바이러스 아임니다"</div>
                     <div class="next-arrow">▼ 클릭하여 계속</div>
                 </div>
-            </div>
+            </div> 
         </div>
 
     </div>
@@ -715,10 +697,8 @@
         </div>
         <div class="taskbar-items">
             <div class="taskbar-item" id="taskbar-game">
-                <!-- ==========================================================================
-                   [imgs 폴더 설정 7] 태스크바 프로그램 아이콘 이미지 (imgs/icon.png)
-                   ========================================================================== -->
-                <img src="imgs/icon.png" alt="작은 아이콘" class="small-icon-img">
+                <!-- [이미지 3] 태스크바 프로그램 아이콘 (images/003.png) -->
+                <img src="images/003.png" alt="작은 아이콘" class="small-icon-img">
                 <span class="taskbar-item-text">절대 바이러스 아닙니다.exe</span>
             </div>
         </div>
@@ -772,15 +752,14 @@
         // 비밀번호 설정
         const CORRECT_PASSWORD = "nia1004";
 
-        // 1. 부팅 시퀀스 -> 잠금화면 전환 (2.8초 후)
+        // 1. 부팅 시퀀스 -> 잠금화면 자연스러운 페이드아웃 전환 (2.5초 후)
         setTimeout(() => {
             bootScreen.classList.add('fade-out');
             setTimeout(() => {
                 bootScreen.style.display = 'none';
-                lockScreen.classList.remove('hidden');
                 passwordInput.focus();
-            }, 600);
-        }, 2800);
+            }, 500);
+        }, 2500);
 
         // 2. 잠금화면 비밀번호 확인
         function checkPassword() {
@@ -807,10 +786,10 @@
 
         // 대사 데이터
         const script = [
-            { name: "???", text: '"안녕? 날 클릭한 거야? 바이러스인 줄 알고 놀랐지...?"' },
-            { name: "돌고래(?) 소녀", text: '"난 해로운 프로그램이 아니야. 그저... 너랑 이야기하고 싶었을 뿐이라구."' },
-            { name: "돌고래(?) 소녀", text: '"결국 내가 노력해도 사람들에게 의심만 받고, 좋은 일은 하나도 없었지만..."' },
-            { name: "돌고래(?) 소녀", text: '"그래도 이렇게 들어와 줬으니까... 절대 날 두고 종료하면 안 돼?"' }
+            { name: "니아", text: '"안녕 하새요 바이러스 아임니다"' },
+            { name: "니아", text: '"저는 니아 입니다 믿어주세요"' },
+            { name: "니아", text: '"바이러스 아입니다"' },
+            { name: "니아", text: '"똥 먹어"' }
         ];
         let currentScriptIndex = 0;
 
@@ -836,7 +815,7 @@
             dolphinIcon.classList.remove('selected');
         });
 
-        // 아이콘을 눌러야만 창이 나타남
+        // 아이콘을 클릭하면 창 열림
         dolphinIcon.addEventListener('click', openGame);
         dolphinIcon.addEventListener('dblclick', openGame);
 
@@ -963,4 +942,3 @@
 </body>
 </html>
 
-```
