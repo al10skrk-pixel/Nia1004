@@ -245,9 +245,9 @@
             height: calc(100vh - 30px);
             
             /* ==========================================================================
-               [이미지 002] 바탕화면 배경 이미지 (imgs/002.png)
+               [이미지 002] 바탕화면 배경 이미지 (images/002.png)
                ========================================================================== */
-            background: #222222 url('imgs/002.png') no-repeat center center fixed;
+            background: #222222 url('images/002.png') no-repeat center center fixed;
             background-size: cover;
             
             position: relative;
@@ -610,7 +610,7 @@
         </div>
     </div>
 
-    <!-- 2. 잠금 화면 (Lock Screen - 처음부터 z-index 9000으로 부팅화면 바로 아래 위치) -->
+    <!-- 2. 잠금 화면 (Lock Screen) -->
     <div class="lock-screen" id="lock-screen">
         <div class="lock-top-bar"></div>
         
@@ -625,9 +625,9 @@
             <div class="lock-user-card">
                 <div class="lock-avatar-box">
                     <!-- ==========================================================================
-                       [이미지 001] 잠금 화면 아바타 이미지 (imgs/001.png)
+                       [이미지 001] 잠금 화면 아바타 이미지 (images/001.png)
                        ========================================================================== -->
-                    <img src="imgs/001.png" alt="User Avatar" onerror="this.style.display='none'">
+                    <img src="images/001.png" alt="User Avatar" onerror="this.style.display='none'">
                 </div>
                 <div class="lock-input-group">
                     <div class="lock-username">유저 (User)</div>
@@ -653,9 +653,9 @@
         <div class="icon" id="dolphin-icon">
             <div class="icon-img-box">
                 <!-- ==========================================================================
-                   [이미지 003] 바탕화면 아이콘 이미지 (imgs/003.png)
+                   [이미지 003] 바탕화면 아이콘 이미지 (images/003.png)
                    ========================================================================== -->
-                <img src="imgs/003.png" alt="아이콘 이미지" onerror="this.style.display='none'">
+                <img src="images/003.png" alt="아이콘 이미지" onerror="this.style.display='none'">
             </div>
             <div class="icon-text">절대 바이러스 아닙니다. 믿어 주세요… 전 돌고래 입니다</div>
         </div>
@@ -666,9 +666,9 @@
             <div class="title-bar" id="title-bar">
                 <div class="title-bar-left">
                     <!-- ==========================================================================
-                       [이미지 004] 창 상단 타이틀바 작은 아이콘 이미지 (imgs/004.png)
+                       [이미지 004] 창 상단 타이틀바 작은 아이콘 이미지 (images/004.png)
                        ========================================================================== -->
-                    <img src="imgs/004.png" alt="작은 아이콘" class="small-icon-img" onerror="this.style.display='none'">
+                    <img src="images/004.png" alt="작은 아이콘" class="small-icon-img" onerror="this.style.display='none'">
                     <span id="window-title">절대 바이러스 아닙니다.exe</span>
                 </div>
                 <div class="window-controls">
@@ -681,14 +681,14 @@
             <!-- 게임 뷰포트 -->
             <div class="game-viewport">
                 <!-- ==========================================================================
-                   [이미지 005] 미연시 창 내부 '방 배경' 이미지 (imgs/005.png)
+                   [이미지 005] 미연시 창 내부 '방 배경' 이미지 (images/005.png)
                    ========================================================================== -->
-                <img src="imgs/005.png" alt="방 배경" class="game-bg">
+                <img src="images/005.png" alt="방 배경" class="game-bg">
 
                 <!-- ==========================================================================
-                   [이미지 006] 미연시 창 내부 '캐릭터' 이미지 (imgs/006.png)
+                   [이미지 006] 미연시 창 내부 '캐릭터' 이미지 (images/006.png)
                    ========================================================================== -->
-                <img src="imgs/006.png" alt="캐릭터" class="character-img" id="character-img">
+                <img src="images/006.png" alt="캐릭터" class="character-img" id="character-img">
 
                 <!-- 미연시 스타일 UI (대사 상자) -->
                 <div class="dialogue-box" id="dialogue-box">
@@ -709,8 +709,8 @@
         </div>
         <div class="taskbar-items">
             <div class="taskbar-item" id="taskbar-game">
-                <!-- 태스크바 아이콘 (imgs/004.png) -->
-                <img src="imgs/004.png" alt="작은 아이콘" class="small-icon-img" onerror="this.style.display='none'">
+                <!-- 태스크바 아이콘 (images/004.png) -->
+                <img src="images/004.png" alt="작은 아이콘" class="small-icon-img" onerror="this.style.display='none'">
                 <span class="taskbar-item-text">절대 바이러스 아닙니다.exe</span>
             </div>
         </div>
@@ -764,7 +764,7 @@
         // 비밀번호 설정
         const CORRECT_PASSWORD = "nia1004";
 
-        // 1. 부팅 시퀀스 -> 바로 뒤에 위치한 잠금화면으로 매끄럽게 전환
+        // 1. 부팅 시퀀스 -> 매끄러운 잠금화면 전환
         setTimeout(() => {
             bootScreen.classList.add('fade-out');
             passwordInput.focus();
@@ -911,7 +911,7 @@
                 gameWindow.style.top = originalRect.top || '50px';
                 gameWindow.style.left = originalRect.left || '150px';
                 gameWindow.style.width = originalRect.width || '640px';
-                gameWindow.style.height = originalRect.height || '380px';
+                gameWindow.style.height = originalRect.height || '480px';
                 isMaximized = false;
             }
         });
