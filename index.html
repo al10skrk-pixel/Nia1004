@@ -65,7 +65,6 @@
             letter-spacing: 2px;
         }
 
-        /* 부팅 로딩 바 (XP 스타일) */
         .boot-loading-bar {
             width: 180px;
             height: 14px;
@@ -109,7 +108,7 @@
         }
 
         .lock-screen.hidden {
-            display: none;
+            display: none !important;
         }
 
         .lock-top-bar, .lock-bottom-bar {
@@ -183,7 +182,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: grayscale(100%);
         }
 
         .lock-input-group {
@@ -247,12 +245,11 @@
             height: calc(100vh - 30px);
             
             /* ==========================================================================
-               [수정 위치 1] 바탕화면 배경 이미지 경로 (imgs 폴더)
+               [이미지 002] 바탕화면 배경 이미지 (imgs/002.png)
                ========================================================================== */
-            background: #222222 url('imgs/desktop_bg.png') no-repeat center center fixed;
+            background: #222222 url('imgs/002.png') no-repeat center center fixed;
             background-size: cover;
             
-            filter: grayscale(100%);
             position: relative;
             padding: 15px;
         }
@@ -305,7 +302,7 @@
         }
 
         /* ----------------------------------------------------
-           4. 윈도우 창 스타일 (Gray 스케일 미연시 창)
+           4. 윈도우 창 스타일 (미연시 창)
         ---------------------------------------------------- */
         .window {
             position: absolute;
@@ -323,7 +320,6 @@
             z-index: 10;
         }
 
-        /* 기본 상태: 바탕화면 진입 시 창은 안 보임 */
         .window.hidden {
             display: none !important;
         }
@@ -395,7 +391,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: grayscale(100%) brightness(0.7);
         }
 
         .character-img {
@@ -404,7 +399,7 @@
             height: 85%;
             object-fit: contain;
             z-index: 2;
-            filter: grayscale(100%) drop-shadow(0 0 10px rgba(0,0,0,0.8));
+            filter: drop-shadow(0 0 10px rgba(0,0,0,0.8));
             transition: transform 0.2s ease;
         }
 
@@ -520,7 +515,7 @@
             color: #ffffff;
             cursor: pointer;
             border: 1px solid #666666;
-            display: none; /* 창이 열릴 때 나타남 */
+            display: none;
         }
 
         .taskbar-item.active {
@@ -615,8 +610,8 @@
         </div>
     </div>
 
-    <!-- 2. 잠금 화면 (Lock Screen) -->
-    <div class="lock-screen hidden" id="lock-screen">
+    <!-- 2. 잠금 화면 (Lock Screen - 처음부터 z-index 9000으로 부팅화면 바로 아래 위치) -->
+    <div class="lock-screen" id="lock-screen">
         <div class="lock-top-bar"></div>
         
         <div class="lock-center-content">
@@ -630,9 +625,9 @@
             <div class="lock-user-card">
                 <div class="lock-avatar-box">
                     <!-- ==========================================================================
-                       [수정 위치 0] 잠금 화면 유저 아바타 이미지 경로 (imgs/user_avatar.png)
+                       [이미지 001] 잠금 화면 아바타 이미지 (imgs/001.png)
                        ========================================================================== -->
-                    <img src="imgs/user_avatar.png" alt="User Avatar" onerror="this.style.display='none'">
+                    <img src="imgs/001.png" alt="User Avatar" onerror="this.style.display='none'">
                 </div>
                 <div class="lock-input-group">
                     <div class="lock-username">유저 (User)</div>
@@ -658,22 +653,22 @@
         <div class="icon" id="dolphin-icon">
             <div class="icon-img-box">
                 <!-- ==========================================================================
-                   [수정 위치 2] 바탕화면 아이콘 이미지 경로 (imgs/dolphin_icon.png)
+                   [이미지 003] 바탕화면 아이콘 이미지 (imgs/003.png)
                    ========================================================================== -->
-                <img src="imgs/dolphin_icon.png" alt="아이콘 이미지" onerror="this.src='imgs/default_icon.png'">
+                <img src="imgs/003.png" alt="아이콘 이미지" onerror="this.style.display='none'">
             </div>
             <div class="icon-text">절대 바이러스 아닙니다. 믿어 주세요… 전 돌고래 입니다</div>
         </div>
 
-        <!-- 미연시 게임 창 (기본 상태: hidden으로 숨김 처리) -->
+        <!-- 미연시 게임 창 -->
         <div class="window hidden" id="game-window">
             <!-- 타이틀 바 -->
             <div class="title-bar" id="title-bar">
                 <div class="title-bar-left">
                     <!-- ==========================================================================
-                       [수정 위치 3] 창 상단 타이틀바 작은 아이콘 이미지 경로 (imgs/small_icon.png)
+                       [이미지 004] 창 상단 타이틀바 작은 아이콘 이미지 (imgs/004.png)
                        ========================================================================== -->
-                    <img src="imgs/small_icon.png" alt="작은 아이콘" class="small-icon-img" onerror="this.src='imgs/dolphin_icon.png'">
+                    <img src="imgs/004.png" alt="작은 아이콘" class="small-icon-img" onerror="this.style.display='none'">
                     <span id="window-title">절대 바이러스 아닙니다.exe</span>
                 </div>
                 <div class="window-controls">
@@ -686,14 +681,14 @@
             <!-- 게임 뷰포트 -->
             <div class="game-viewport">
                 <!-- ==========================================================================
-                   [수정 위치 4] 미연시 창 내부 '방 배경' 이미지 경로 (imgs/room_bg.png)
+                   [이미지 005] 미연시 창 내부 '방 배경' 이미지 (imgs/005.png)
                    ========================================================================== -->
-                <img src="imgs/room_bg.png" alt="방 배경" class="game-bg">
+                <img src="imgs/005.png" alt="방 배경" class="game-bg">
 
                 <!-- ==========================================================================
-                   [수정 위치 5] 미연시 창 내부 '캐릭터' 이미지 경로 (imgs/character.png)
+                   [이미지 006] 미연시 창 내부 '캐릭터' 이미지 (imgs/006.png)
                    ========================================================================== -->
-                <img src="imgs/character.png" alt="캐릭터" class="character-img" id="character-img">
+                <img src="imgs/006.png" alt="캐릭터" class="character-img" id="character-img">
 
                 <!-- 미연시 스타일 UI (대사 상자) -->
                 <div class="dialogue-box" id="dialogue-box">
@@ -714,10 +709,8 @@
         </div>
         <div class="taskbar-items">
             <div class="taskbar-item" id="taskbar-game">
-                <!-- ==========================================================================
-                   [수정 위치 6] 태스크바 프로그램 아이콘 이미지 경로 (imgs/small_icon.png)
-                   ========================================================================== -->
-                <img src="imgs/small_icon.png" alt="작은 아이콘" class="small-icon-img" onerror="this.src='imgs/dolphin_icon.png'">
+                <!-- 태스크바 아이콘 (imgs/004.png) -->
+                <img src="imgs/004.png" alt="작은 아이콘" class="small-icon-img" onerror="this.style.display='none'">
                 <span class="taskbar-item-text">절대 바이러스 아닙니다.exe</span>
             </div>
         </div>
@@ -771,13 +764,12 @@
         // 비밀번호 설정
         const CORRECT_PASSWORD = "nia1004";
 
-        // 1. 부팅 시퀀스 -> 잠금화면 전환 (2.8초 후)
+        // 1. 부팅 시퀀스 -> 바로 뒤에 위치한 잠금화면으로 매끄럽게 전환
         setTimeout(() => {
             bootScreen.classList.add('fade-out');
+            passwordInput.focus();
             setTimeout(() => {
                 bootScreen.style.display = 'none';
-                lockScreen.classList.remove('hidden');
-                passwordInput.focus();
             }, 600);
         }, 2800);
 
@@ -867,7 +859,7 @@
             }
         });
 
-        // Start 버튼 클릭 시 흑백 블루스크린
+        // Start 버튼 클릭 시 블루스크린
         startBtn.addEventListener('click', triggerBSOD);
 
         function triggerBSOD() {
@@ -919,7 +911,7 @@
                 gameWindow.style.top = originalRect.top || '50px';
                 gameWindow.style.left = originalRect.left || '150px';
                 gameWindow.style.width = originalRect.width || '640px';
-                gameWindow.style.height = originalRect.height || '480px';
+                gameWindow.style.height = originalRect.height || '380px';
                 isMaximized = false;
             }
         });
