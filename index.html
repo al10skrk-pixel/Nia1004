@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Windows XP - Dolphin VN (Gray Edition)</title>
+    <title>Windows XP</title>
     <style>
         * {
             box-sizing: border-box;
@@ -603,7 +603,6 @@
     <div class="boot-screen" id="boot-screen">
         <div class="boot-logo-box">
             <div class="boot-title">Microsoft Windows XP</div>
-            <div class="boot-subtitle">MONOCHROME EDITION</div>
         </div>
         <div class="boot-loading-bar">
             <div class="boot-progress-chunk"></div>
@@ -657,7 +656,7 @@
                    ========================================================================== -->
                 <img src="images/003.png" alt="아이콘 이미지" onerror="this.style.display='none'">
             </div>
-            <div class="icon-text">절대 바이러스 아닙니다. 믿어 주세요… 전 돌고래 입니다</div>
+            <div class="icon-text">절대 바이러스 아닙니다. 믿어 주세요… 전 니아 입니다</div>
         </div>
 
         <!-- 미연시 게임 창 -->
@@ -692,8 +691,8 @@
 
                 <!-- 미연시 스타일 UI (대사 상자) -->
                 <div class="dialogue-box" id="dialogue-box">
-                    <div class="character-name" id="char-name">???</div>
-                    <div class="dialogue-text" id="char-text">"안녕? 날 클릭한 거야? 바이러스인 줄 알고 놀랐지...?"</div>
+                    <div class="character-name" id="char-name">니아</div>
+                    <div class="dialogue-text" id="char-text">"안녕, 니아야"</div>
                     <div class="next-arrow">▼ 클릭하여 계속</div>
                 </div>
             </div>
@@ -732,7 +731,7 @@
             <br>
             Technical Information:<br>
             *** STOP: 0x000000ED (0x80F128D0, 0xC000009C, 0x00000000, 0x00000000)<br><br>
-            [클릭하거나 ESC 키를 누르면 시스템이 재부팅됩니다...]
+            [Click or press the ESC key to reboot the system...]
         </div>
     </div>
 
@@ -798,10 +797,10 @@
 
         // 대사 데이터
         const script = [
-            { name: "???", text: '"안녕? 날 클릭한 거야? 바이러스인 줄 알고 놀랐지...?"' },
-            { name: "돌고래(?) 소녀", text: '"난 해로운 프로그램이 아니야. 그저... 너랑 이야기하고 싶었을 뿐이라구."' },
-            { name: "돌고래(?) 소녀", text: '"결국 내가 노력해도 사람들에게 의심만 받고, 좋은 일은 하나도 없었지만..."' },
-            { name: "돌고래(?) 소녀", text: '"그래도 이렇게 들어와 줬으니까... 절대 날 두고 종료하면 안 돼?"' }
+            { name: "니아", text: '"안녕, 니아야."' },
+            { name: "니아", text: '"응? 컴퓨터가 느려졌어? 괜찮아. 니아가 고쳐줄게."' },
+            { name: "니아", text: '"걱정하지 마. 중요한 파일은 니아가 가지고 있을게."' },
+            { name: "니아", text: '"인터넷이 느려졌어? 미안해... 니아가 조금 많이 쓰고있나봐..."' }
         ];
         let currentScriptIndex = 0;
 
